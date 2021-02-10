@@ -1,13 +1,18 @@
 package marvel
 
 import (
-	"github.com/ghabxph/marvel-xendit/internal/testutils"
-	"github.com/ghabxph/marvel-xendit/internal/memorydb"
-	"github.com/gofiber/fiber/v2/utils"
+	"os"
 	"testing"
+	"github.com/ghabxph/marvel-xendit/internal/live"
+	"github.com/ghabxph/marvel-xendit/internal/memorydb"
+	"github.com/ghabxph/marvel-xendit/internal/testutils"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 func TestMarvel(t *testing.T) {
+
+	// Set config path
+	os.Setenv(live.CONFIG_PATH_KEY, "../../config.yaml")
 
 	// Create memorydb instance
 	db := memorydb.GetInstance()

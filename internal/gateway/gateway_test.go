@@ -1,15 +1,20 @@
 package gateway
 
 import (
-	"github.com/ghabxph/marvel-xendit/internal/memorydb"
-	"github.com/ghabxph/marvel-xendit/internal/testutils"
-	"github.com/gofiber/fiber/v2/utils"
+	"os"
 	"io/ioutil"
 	"net/http/httptest"
 	"testing"
+	"github.com/ghabxph/marvel-xendit/internal/live"
+	"github.com/ghabxph/marvel-xendit/internal/memorydb"
+	"github.com/ghabxph/marvel-xendit/internal/testutils"
+	"github.com/gofiber/fiber/v2/utils"
 )
 
 func TestGatewayEndpoints(t *testing.T) {
+
+	// Set config path
+	os.Setenv(live.CONFIG_PATH_KEY, "../../config.yaml")
 
 	// MemoryDB Instance
 	db := memorydb.GetInstance()

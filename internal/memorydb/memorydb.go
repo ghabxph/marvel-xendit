@@ -6,7 +6,9 @@ import (
 	"sort"
 )
 
-type memorydb struct{}
+type memorydb struct{
+	total_characters int
+}
 var instance *memorydb
 
 type character struct {
@@ -21,9 +23,20 @@ var characters map[int]*character
 // Get memorydb instance
 func GetInstance() *memorydb {
 	if instance == nil {
-		instance = &memorydb{}
+		instance = &memorydb{total_characters:0}
 	}
 	return instance
+}
+
+// Checks if there's change in total number of characters and notes
+// the new value
+func (m *memorydb) TotalCharacterChanged(total int) bool {
+	var change bool
+	if total != m.total_characters {
+		change = true
+	}
+	m.total_characters = total
+	return change
 }
 
 // Create new character and store in memory
@@ -54,6 +67,8 @@ func (m *memorydb) GetCharacter(id int) (character string, exists bool) {
 }
 
 func (m *memorydb) GetCharacters(page int) string {
+	// TODO: page parameter is still not yet implemented.
+
 	// Slice of int keys
 	keys_i := make([]int, 0, len(characters))
 

@@ -5,21 +5,21 @@ import (
 	"github.com/ghabxph/marvel-xendit/internal/live"
 )
 
-type Memorydb_impl interface {
+type memorydb_impl interface {
 	CreateCharacter(id int, name string, description string)
 	GetCharacters(page int) string
 	GetCharacter(id int) (string, bool)
 }
 
 type marvel struct {
-	db Memorydb_impl
+	db memorydb_impl
 }
 
 var instance *marvel
 
-func GetInstance(db ...Memorydb_impl) *marvel {
+func GetInstance(db ...interface{}) *marvel {
 	if instance == nil {
-		instance = &marvel{db:db[0]}
+		instance = &marvel{db:db[0].(memorydb_impl)}
 		live.GetInstance(db[0])
 	}
 	return instance

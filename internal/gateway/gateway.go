@@ -6,11 +6,11 @@ import (
 )
 
 type gateway struct {
-	db marvel.Memorydb_impl
+	db interface{}
 }
 var instance *gateway
 
-func GetInstance(db ...marvel.Memorydb_impl) *gateway {
+func GetInstance(db ...interface{}) *gateway {
 	if instance == nil {
 		instance = &gateway{db:db[0]}
 	}
