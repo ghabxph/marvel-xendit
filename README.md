@@ -13,6 +13,13 @@ Just a simple tool that fetches all characters from official marvel api.
   
 ## Building and running the application
 
+Clone this project:
+
+``` sh
+# Clones our source code into marvel folder
+git clone https://github.com/ghabxph/marvel-xendit.git marvel
+```
+
 First, you need to be a [marvel developer](https://developer.marvel.com/) and get your app
 key and secret. Then create a `config.yaml` file in this directory.
 
