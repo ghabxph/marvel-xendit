@@ -19,6 +19,9 @@ COPY --from=build /app/bin/marvel /app/marvel
 # Copies the config
 COPY --from=build /app/config.yaml /app/config.yaml
 
+# Copies the swagger document
+COPY --from=build /app/swagger.yaml /app/swagger.yaml
+
 # Sets the workdir
 WORKDIR /app
 
