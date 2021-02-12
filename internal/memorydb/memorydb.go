@@ -79,7 +79,7 @@ func (m *memorydb) GetCharacter(id int) (character interface{}, exists bool) {
 	}, true
 }
 
-func (m *memorydb) GetCharacters(page int) []int {
+func (m *memorydb) GetCharacters(page int) ([]int, int) {
 
 	// Count of items to show
 	count := 500
@@ -91,7 +91,7 @@ func (m *memorydb) GetCharacters(page int) []int {
 	offset := (page - 1) * count
 
 	// Returns empty result if offset is larger or equal to capacity of slice
-	if offset >= total { return make([]int, 0) }
+	if offset >= total { return make([]int, 0), 404 }
 
 	// Adjust the value of total if new total is less or equal total
 	if new_total := offset + count; new_total <= total { total = new_total }
@@ -105,9 +105,7 @@ func (m *memorydb) GetCharacters(page int) []int {
 		keys = append(keys, character_ids[i])
 	}
 
-	return keys
-
-	//return "[" + strings.Join(keys, ", ") + "]"
+	return keys, 200
 }
 
 // Get json string of character

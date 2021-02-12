@@ -70,10 +70,11 @@ func TestScraper(t *testing.T) {
 		// TODO: Page parameter is still not yet functional
 		// Right now, it will return all items you've collected.
 		// Maybe one test point is to make sure that page 1 must only return 100 items.
-		characters := db.GetCharacters(1)
+		characters, status := db.GetCharacters(1)
 
 		// Check if all character exist.
 		utils.AssertEqual(t, e_characters, characters)
+		utils.AssertEqual(t, 200, status)
 	})
 
 	t.Run("Check a character in mock MemoryDB", func(t *testing.T) {

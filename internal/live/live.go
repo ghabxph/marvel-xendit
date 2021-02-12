@@ -62,14 +62,15 @@ func GetInstance(db ...interface{}) *live {
 	return instance
 }
 
-func (l *live) GetCharacter(id string) (character interface{}) {
-	defer func(character *interface{}) {
+func (l *live) GetCharacter(id string) (character interface{}, status int) {
+	defer func(character *interface{}, status *int) {
 		if r := recover(); r != nil {
 			id, _ := strconv.Atoi(id)
 			l.db.CreateCharacter(id, "error", "Character does not exist")
 			*character = map[string]string{ "error": "Character does not exist." }
+			*status = 404
 		}
-	}(&character)
+	}(&character, &status)
 	raw := l.call("/v1/public/characters/" + id)
 	resp := response{}
 	json.Unmarshal([]byte(raw), &resp)
@@ -79,7 +80,7 @@ func (l *live) GetCharacter(id string) (character interface{}) {
 		resp.Data.Results[0].Description,
 	)
 	ret, _ := l.db.GetCharacter(resp.Data.Results[0].Id)
-	return ret
+	return ret, 200
 }
 
 // Gets 100 characters. Returns the total number of characters

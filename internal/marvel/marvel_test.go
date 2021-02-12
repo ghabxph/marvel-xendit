@@ -32,17 +32,19 @@ func TestMarvel(t *testing.T) {
 	t.Run("Get all characters", func(t *testing.T) {
 
 		// Get all characters in page 1
-		chars := marvel.GetAllCharacters("1")
+		chars, status := marvel.GetAllCharacters("1")
 
 		// Do we get all characters?
 		utils.AssertEqual(t, testutils.GetTestCharacters(), chars)
+		utils.AssertEqual(t, 200, status)
 	})
 
 	t.Run("Get a character", func(t *testing.T) {
 		// Get a character
-		char := marvel.GetCharacter("1009146")
+		char, status := marvel.GetCharacter("1009146")
 
 		// Do we get the character?
 		utils.AssertEqual(t, testutils.GetTestCharacter(), char)
+		utils.AssertEqual(t, 200, status)
 	})
 }

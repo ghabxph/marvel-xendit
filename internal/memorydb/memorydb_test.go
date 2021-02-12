@@ -37,7 +37,8 @@ func TestMemoryDB(t *testing.T) {
 	})
 
 	t.Run("Get all characters in page 1 in memory", func(t *testing.T) {
-		chars := db.GetCharacters(1)
+		chars, status := db.GetCharacters(1)
 		utils.AssertEqual(t, characters, chars)
+		utils.AssertEqual(t, 200, status)
 	})
 }

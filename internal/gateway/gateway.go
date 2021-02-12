@@ -23,11 +23,13 @@ func (g *gateway) Fiber() *fiber.App {
 	bl := marvel.GetInstance(g.db)
 
 	app.Get("/characters", func(c *fiber.Ctx) error {
-		return c.JSON(bl.GetAllCharacters(c.Query("page", "1")))
+		resp, status := bl.GetAllCharacters(c.Query("page", "1"))
+		return c.Status(status).JSON(resp)
 	})
 
 	app.Get("/characters/:id", func(c *fiber.Ctx) error {
-		return c.JSON(bl.GetCharacter(c.Params("id")))
+		resp, status := bl.GetCharacter(c.Params("id"))
+		return c.Status(status).JSON(resp)
 	})
 
 	return app
