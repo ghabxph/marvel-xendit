@@ -1,0 +1,57 @@
+swagger: "2.0"
+info:
+  description: "Just a simple tool that fetches all characters from official marvel api."
+  version: "1.0.0"
+  title: "Marvel Characters"
+  license:
+    name: "MIT"
+    url: "https://github.com/ghabxph/marvel-xendit/blob/master/LICENSE.md"
+host: "marvel.ghabxph.info"
+basePath: "/"
+schemes:
+- "https"
+paths:
+  /characters:
+    get:
+      tags:
+      - "Marvel Characters"
+      summary: "Returns all the marvel character ids in a JSON array of numbers"
+      description: ""
+      operationId: "Dd"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "query"
+        name: "page"
+        type: "number"
+        description: "Shows the target page. Each page shows 500 items."
+        required: false
+      responses:
+        "404":
+          description: "Page do not exist"
+        "400":
+          description: "Bad request"
+  /characters/{id}:
+    get:
+      tags:
+      - "Marvel Characters"
+      summary: "Returns all the marvel character ids in a JSON array of numbers"
+      description: ""
+      operationId: "QQ"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "path"
+        name: "id"
+        type: "number"
+        description: "Returns the id, name, and description of a character."
+        required: true
+      responses:
+        "404":
+          description: "Character does not exist"
+        "400":
+          description: "Bad request"
