@@ -1,16 +1,25 @@
 # Marvel Characters
 
-Just a simple tool that fetches all characters from official marvel api.
+[Official Website](https://marvel.ghabxph.info)
+
+Just a simple tool that fetches all characters from official marvel  api.  Developed  with
+love by yours truly.
 
 ## Requirements
 
+* GNU Make (optional)
 * Either:
   * Go 1.15
-  * Make (optional)
 * Or:
   * Docker
   * Docker Compose
   
+## API Documentation
+
+Our API is documented using Swagger OpenAPI. The documentation is served within  the  app.
+The root (/) route shall redirect you to the API documentation and teach you how to
+consume this endpoint.
+
 ## Building and running the application
 
 Clone our repository:
