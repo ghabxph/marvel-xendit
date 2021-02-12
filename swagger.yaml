@@ -6,9 +6,10 @@ info:
   license:
     name: "MIT"
     url: "https://github.com/ghabxph/marvel-xendit/blob/master/LICENSE.md"
-host: "marvel.ghabxph.info"
+host: ""
 basePath: "/"
 schemes:
+- "http"
 - "https"
 paths:
   /characters:
@@ -29,6 +30,8 @@ paths:
         description: "Shows the target page. Each page shows 500 items."
         required: false
       responses:
+        "200":
+          description: "Page exists. It should show an array of character IDs."
         "404":
           description: "Page do not exist"
         "400":
@@ -51,6 +54,8 @@ paths:
         description: "Returns the id, name, and description of a character."
         required: true
       responses:
+        "200":
+          description: "Shows information about the character."
         "404":
           description: "Character does not exist"
         "400":

@@ -2,6 +2,7 @@ package gateway
 
 import (
 	"github.com/ghabxph/marvel-xendit/internal/marvel"
+	"github.com/arsmn/fiber-swagger/v2"
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,6 +22,12 @@ func (g *gateway) Fiber() *fiber.App {
 	app := fiber.New()
 
 	bl := marvel.GetInstance(g.db)
+
+	// PS: This damn thing took me hours, then I see that there's
+	// such thing as swagger for fiber =.=
+	app.Get("/", func (c *fiber.Ctx) error { return c.Redirect("/docs/index.html") })
+	app.Get("/docs/*", swagger.New(swagger.Config{DeepLinking: true, URL:"/swagger.yaml"}))
+	app.Static("/swagger.yaml", "./swagger.yaml")
 
 	app.Get("/characters", func(c *fiber.Ctx) error {
 		resp, status := bl.GetAllCharacters(c.Query("page", "1"))
