@@ -15,3 +15,17 @@ services:
     # Port to expose
     ports:
       - 8080:8080
+
+  # Swagger Server
+  doc:
+
+    # Go Swagger
+    image: quay.io/goswagger/swagger
+
+    volumes:
+      - ./swagger.yaml:/app/swagger.yaml
+    working_dir: /app
+    #command: generate server -A todo-list -f ./swagger.yaml
+    command: serve ./swagger.yaml --no-open --port=8081 --flavor=swagger
+    ports:
+      - 8081:8081
