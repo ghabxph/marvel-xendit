@@ -1,8 +1,17 @@
+version: "3"
 
 services:
+
+  # Marvel app
   app:
+
+    # Name of tag to be created when building
     image: marvel-xendit
+
+    # Build config
     build:
       context: .
+
+    # Port to expose
     ports:
       - 8080:8080
