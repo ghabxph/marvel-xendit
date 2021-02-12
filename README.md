@@ -1,6 +1,8 @@
 # Marvel Characters
 
-[Official Website](https://marvel.ghabxph.info)
+[![Official Website - https://ghabxph.info](https://img.shields.io/badge/Official%20Website-https://marvel.ghabxph.info-green.svg)](https://marvel.ghabxph.info)
+[![Maintainer - GhabXPH](https://img.shields.io/badge/maintainer-ghabxph-green.svg)](https://github.com/ghabxph)
+[![Project Status - Feature Complete](https://img.shields.io/badge/project%20status-feature%20complete-green.svg)](https://github.com/ghabxph/marvel-xendit)
 
 Just a simple tool that fetches all characters from official marvel  api.  Developed  with
 love by yours truly.
@@ -17,7 +19,7 @@ love by yours truly.
 ## API Documentation
 
 Our API is documented using Swagger OpenAPI. The documentation is served within  the  app.
-The root (/) route shall redirect you to the API documentation and teach you how to
+The root (/) route shall redirect you to the  API  documentation  and  teach  you  how  to
 consume this endpoint.
 
 ## Building and running the application
