@@ -1,11 +1,16 @@
 package memorydb
 
 import (
+	"io/ioutil"
+	"log"
 	"testing"
 	"github.com/gofiber/fiber/v2/utils"
 )
 
 func TestMemoryDB(t *testing.T) {
+
+	// Disable logging
+	log.SetOutput(ioutil.Discard)
 
 	// MemoryDB Instance
 	db := GetInstance()

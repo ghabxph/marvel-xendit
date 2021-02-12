@@ -1,9 +1,10 @@
 package gateway
 
 import (
-	"os"
 	"io/ioutil"
+	"log"
 	"net/http/httptest"
+	"os"
 	"testing"
 	"github.com/ghabxph/marvel-xendit/internal/live"
 	"github.com/ghabxph/marvel-xendit/internal/memorydb"
@@ -12,6 +13,9 @@ import (
 )
 
 func TestGatewayEndpoints(t *testing.T) {
+
+	// Disable logging
+	log.SetOutput(ioutil.Discard)
 
 	// Set config path
 	os.Setenv(live.CONFIG_PATH_KEY, "../../config.yaml")

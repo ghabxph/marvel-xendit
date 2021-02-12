@@ -2,6 +2,7 @@ package scraper
 
 import (
 	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 	"github.com/ghabxph/marvel-xendit/internal/live"
@@ -23,6 +24,9 @@ func (m *mockHttp) Get(url string) string {
 }
 
 func TestScraper(t *testing.T) {
+
+	// Disable logging
+	log.SetOutput(ioutil.Discard)
 
 	// Set config path
 	os.Setenv(live.CONFIG_PATH_KEY, "../../config.yaml")

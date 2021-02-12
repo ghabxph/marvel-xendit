@@ -15,6 +15,9 @@ func main() {
 	// Create memorydb instance
 	db := memorydb.GetInstance()
 
+	// Load characters from file system
+	db.Load()
+
 	// Create gateway instance
 	gateway := _gateway.GetInstance(db)
 
@@ -22,7 +25,7 @@ func main() {
 	scraper := _scraper.GetInstance(db)
 
 	// Starts the scraper in the background
-	scraper.Start()
+	go scraper.Start()
 
 	// Initialize fiber
 	gateway.Fiber()

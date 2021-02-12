@@ -7,22 +7,18 @@ import (
 	"time"
 )
 
-type memorydb_impl interface {
-	TotalCharacterChanged(total int) bool
-}
-
 type live_impl interface {
 	GetCharacters(offset string) int
 	MockHttpGet(mock interface{})
 }
 
 type scraper struct {
-	db               memorydb_impl
-	scraper_running  bool
-	offset           chan int
-	live             live_impl
-	scraping_done    chan struct{}
-	total_characters chan int
+	db                interface{}
+	scraper_running   bool
+	offset            chan int
+	live              live_impl
+	scraping_done     chan struct{}
+	total_characters  chan int
 }
 
 var instance *scraper
@@ -30,7 +26,7 @@ var instance *scraper
 // Gets scraper singleton instance
 func GetInstance(db ...interface{}) *scraper {
 	if instance == nil {
-		instance = &scraper{db: db[0].(memorydb_impl), offset: make(chan int, 10), live: live.GetInstance(db[0]), scraping_done: make(chan struct{}), total_characters: make(chan int)}
+		instance = &scraper{db: db[0], offset: make(chan int, 20), live: live.GetInstance(db[0]), scraping_done: make(chan struct{}), total_characters: make(chan int)}
 	}
 
 	return instance
@@ -39,14 +35,17 @@ func GetInstance(db ...interface{}) *scraper {
 // Initialize the scraper in the background
 func (s *scraper) Start() {
 
-	// Ticker that runs the scraper for every 1 day
-	scrape_ticker := time.NewTicker(1 * time.Minute)
+	// Ticker that runs the scraper for everyday
+	scrape_ticker := time.NewTicker(24 * time.Hour)
+
+	// Sleep for 5 seconds.
+	time.Sleep(5 * time.Second)
 
 	// Starts the scraper
 	s.RunScraper()
 
 	// Keeps the scraper to continue
-	go func() { s.ScrapeNext() }()
+	go func() { for { s.ScrapeNext() } }()
 
 	// Scraper that runs every day
 	go func() {
@@ -60,18 +59,18 @@ func (s *scraper) Start() {
 
 			// 2. Gets total characters
 			total_characters := <-s.total_characters
-			log.Println("Total number of characters:", total_characters)
 
-			// 3. Checks if there's change in total number of characters
-			if s.db.TotalCharacterChanged(total_characters) {
+			// 3. Scrape!
+			log.Println("There's a change in total number of characters. We are now going to begin the scraper.")
 
-				// 4. Scrape!
-				log.Println("There's a change in total number of characters. We are now going to begin the scraper.")
-				log.Println("Scraping done.")
+			for i := 2; i <= total_characters/100+1; i++ {
+
+				// Scraping page #x
+				s.Scrape(i)
 			}
 
-			// 5. Waits for the next ticker...
-			log.Println("Waits for the next ticker...")
+			// Notify
+			log.Println("Scraper is done. Next scraping schedule will be tommorow same time this program is executed")
 			<-scrape_ticker.C
 		}
 	}()
@@ -93,6 +92,9 @@ func (s *scraper) RunScraper() {
 			// Gets the offset.
 			offset := <-s.offset
 
+			// Notify
+			log.Println("Scraping offset #" + strconv.Itoa(offset) + " to Marvel server...")
+
 			// If offset is 0, we will send the total number of characters to total_characters channel
 			if offset == 0 {
 
@@ -105,6 +107,9 @@ func (s *scraper) RunScraper() {
 				// The method will also cache it automatically.
 				s.live.GetCharacters(strconv.Itoa(offset))
 			}
+
+			// Notify
+			log.Println("Scraping offset #" + strconv.Itoa(offset) + " done.")
 
 			// Notify that scraping is done
 			s.scraping_done <- struct{}{}
@@ -120,6 +125,9 @@ func (s *scraper) Scrape(page int) {
 	// Gets the offset
 	offset := (page - 1) * 100
 
+	// Notify
+	log.Println("Sending offset #" + strconv.Itoa(offset) + " to the queue.")
+
 	// Sends the offset to offset channel for processing
 	s.offset <- offset
 }
@@ -129,6 +137,9 @@ func (s *scraper) ScrapeNext() {
 
 	// Clears the channel, thus scraper goroutine can continue.
 	<-s.scraping_done
+
+	// Notify
+	log.Println("Moving to next item...")
 }
 
 // Mocks HttpGet (For testing)

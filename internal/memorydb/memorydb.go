@@ -1,54 +1,66 @@
 package memorydb
 
 import (
+	"encoding/json"
+	"io/ioutil"
+	"log"
+	"os"
+	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
-	"sort"
 )
 
-type memorydb struct{
-	total_characters int
-}
+var store_mode bool = true
+
+type memorydb struct{}
 var instance *memorydb
 
 type character struct {
-	id int
-	name string
-	description string
+	Id int
+	Name string
+	Description string
 }
 
 // Map of characters
 var characters map[int]*character
+// Slice of character ids
+var character_ids []int
 
 // Get memorydb instance
 func GetInstance() *memorydb {
-	if instance == nil {
-		instance = &memorydb{total_characters:0}
-	}
-	return instance
-}
 
-// Checks if there's change in total number of characters and notes
-// the new value
-func (m *memorydb) TotalCharacterChanged(total int) bool {
-	var change bool
-	if total != m.total_characters {
-		change = true
+	// Check if instance does not exist yet
+	if instance == nil {
+
+		// Create instance
+		instance = &memorydb{}
+
+		// Initialize map of characters
+		characters = make(map[int]*character)
+
+		// Initialize slice of characters ids
+		character_ids = make([]int, 0)
 	}
-	m.total_characters = total
-	return change
+
+	return instance
 }
 
 // Create new character and store in memory
 func (m *memorydb) CreateCharacter(id int, name string, description string) {
 
-	// Create map of characters if there's none yet
-	if characters == nil {
-		characters = make(map[int]*character)
+	// Add the new ID to slice if it does not exist yet on characters map
+	if _, exists := characters[id]; exists == false {
+
+		// Adds ID to slice
+		character_ids = append(character_ids, id)
+
+		// Sorts the keys every new entry
+		sort.Ints(character_ids)
 	}
 
 	// Store new character in memory
-	characters[id] = &character{id:id, name:name, description:description}
+	characters[id] = &character{Id:id, Name:name, Description:description}
 
 	// Store new character in filesystem
 	characters[id].store()
@@ -67,25 +79,29 @@ func (m *memorydb) GetCharacter(id int) (character string, exists bool) {
 }
 
 func (m *memorydb) GetCharacters(page int) string {
-	// TODO: page parameter is still not yet implemented.
 
-	// Slice of int keys
-	keys_i := make([]int, 0, len(characters))
+	// Count of items to show
+	count := 500
+
+	// Total characters
+	total := len(character_ids)
+
+	// Gets the offset
+	offset := (page - 1) * count
+
+	// Returns empty result if offset is larger or equal to capacity of slice
+	if offset >= total { return "[]" }
+
+	// Adjust the value of total if new total is less or equal total
+	if new_total := offset + count; new_total <= total { total = new_total }
 
 	// Slice of converted int key strings
-	keys := make([]string, 0, len(characters))
+	keys := make([]string, 0)
 
-	// There's no convenient way to convert integer keys of a map.
-	// If there is, I wouldn't resort to loop. I hope there's a O(1)
-	// solution here...
-	for k := range characters {
-		keys_i = append(keys_i, k)
-	}
+	for i := offset; i < total; i++ {
 
-	// Sort the keys
-	sort.Ints(keys_i)
-	for _, v := range keys_i {
-		keys = append(keys, strconv.Itoa(v))
+		// Adds the character id to string slice
+		keys = append(keys, strconv.Itoa(character_ids[i]))
 	}
 
 	return "[" + strings.Join(keys, ", ") + "]"
@@ -94,13 +110,78 @@ func (m *memorydb) GetCharacters(page int) string {
 // Get json string of character
 func (c *character) getString() string {
 	return `{
-  "id": ` + strconv.Itoa(c.id) + `,
-  "name": "` + c.name + `",
-  "description": "` + c.description + `"
+  "id": ` + strconv.Itoa(c.Id) + `,
+  "name": "` + c.Name + `",
+  "description": "` + c.Description + `"
 }`
 }
 
 // Store character in filesystem
 func (c *character) store() {
-	// TODO: Store character in filesystem
+
+	// Exit the function if store_mode is disabled
+	if store_mode == false { return	}
+
+	// Check if .characters folder exists
+	if _, err := os.Stat(".characters"); os.IsNotExist(err) {
+
+		// Creates character folder
+		os.Mkdir(".characters", 0755)
+	}
+
+	// Notify
+	log.Println("Saving", strconv.Itoa(c.Id), ":", c.Name, " to file system.")
+
+	// Storing character data to file system
+	ioutil.WriteFile(".characters/" + strconv.Itoa(c.Id) + ".json", []byte(c.getString()), 0644)
+}
+
+// Loads character from FS
+func (m *memorydb) Load() {
+
+	// Notify
+	log.Println("Checks if .character folder exists")
+
+	// Check if .characters folder exists
+	if _, err := os.Stat(".characters"); os.IsNotExist(err) {
+
+		// Notify
+		log.Println(".characters folder does not exist. Program will now proceed.")
+
+		return
+	}
+
+	// Notify
+	log.Println("Folder exist. Loading all characters...")
+
+	// Disable auto store mode
+	store_mode = false
+
+	filepath.Walk(".characters", func(path string, f os.FileInfo, err error) error {
+
+		// Skip if path is the target folder.
+		if path == ".characters" {
+			return err
+		}
+
+		// Create character instance
+		char := character{}
+
+		// Read character file
+		file, _ := ioutil.ReadFile(path)
+
+		// Creates character instance from json
+		json.Unmarshal(file, &char)
+
+		// Notify
+		log.Println("Loading: ", char)
+
+		// Stores character info to RAM
+		GetInstance().CreateCharacter(char.Id, char.Name, char.Description)
+
+		return err
+	})
+
+	// Re-enable store mode
+	store_mode = true
 }

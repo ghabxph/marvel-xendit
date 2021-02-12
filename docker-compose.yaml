@@ -1,0 +1,8 @@
+
+services:
+  app:
+    image: marvel-xendit
+    build:
+      context: .
+    ports:
+      - 8080:8080

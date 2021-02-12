@@ -23,7 +23,7 @@ func (g *gateway) Fiber() *fiber.App {
 	bl := marvel.GetInstance(g.db)
 
 	app.Get("/characters", func(c *fiber.Ctx) error {
-		return c.SendString(bl.GetAllCharacters())
+		return c.SendString(bl.GetAllCharacters(c.Query("page", "1")))
 	})
 
 	app.Get("/characters/:id", func(c *fiber.Ctx) error {

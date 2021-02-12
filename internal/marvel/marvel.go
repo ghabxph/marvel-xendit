@@ -26,11 +26,18 @@ func GetInstance(db ...interface{}) *marvel {
 }
 
 // Get all marvel characters (max of 100)
-func (m *marvel) GetAllCharacters(page ...int) string {
-	if len(page) == 0 {
-		return m.db.GetCharacters(1)
+func (m *marvel) GetAllCharacters(page string) string {
+
+	// Converts input to string
+	_page, err := strconv.Atoi(page)
+
+	// If not int, then return error
+	if err != nil {
+		return err.Error()
 	}
-	return m.db.GetCharacters(page[0])
+
+	// Otherwise, return characters
+	return m.db.GetCharacters(_page)
 }
 
 // Get a marvel character by ID

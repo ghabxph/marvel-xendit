@@ -1,6 +1,8 @@
 package marvel
 
 import (
+	"io/ioutil"
+	"log"
 	"os"
 	"testing"
 	"github.com/ghabxph/marvel-xendit/internal/live"
@@ -10,6 +12,9 @@ import (
 )
 
 func TestMarvel(t *testing.T) {
+
+	// Disable logging
+	log.SetOutput(ioutil.Discard)
 
 	// Set config path
 	os.Setenv(live.CONFIG_PATH_KEY, "../../config.yaml")
@@ -25,8 +30,9 @@ func TestMarvel(t *testing.T) {
 
 
 	t.Run("Get all characters", func(t *testing.T) {
-		// Get all characters
-		chars := marvel.GetAllCharacters()
+
+		// Get all characters in page 1
+		chars := marvel.GetAllCharacters("1")
 
 		// Do we get all characters?
 		utils.AssertEqual(t, testutils.GetTestCharacters(), chars)
