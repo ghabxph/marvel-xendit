@@ -83,3 +83,6 @@ go test ./internal/memorydb
 go test ./internal/scraper
 ```
 
+# How things work
+
+![](docs/assets/block-diagram.jpg)
