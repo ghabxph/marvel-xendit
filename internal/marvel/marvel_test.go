@@ -41,7 +41,6 @@ func TestMarvel(t *testing.T) {
 	t.Run("Get a character", func(t *testing.T) {
 		// Get a character
 		char := marvel.GetCharacter("1009146")
-		//char := marvel.GetCharacter("1010354")
 
 		// Do we get the character?
 		utils.AssertEqual(t, testutils.GetTestCharacter(), char)

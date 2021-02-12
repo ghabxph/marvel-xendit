@@ -4,7 +4,7 @@ import (
 	"os"
 	"github.com/ghabxph/marvel-xendit/internal/memorydb"
 	_gateway "github.com/ghabxph/marvel-xendit/internal/gateway"
-	_scraper "github.com/ghabxph/marvel-xendit/internal/scraper"
+	//_scraper "github.com/ghabxph/marvel-xendit/internal/scraper"
 )
 
 func main() {
@@ -22,10 +22,10 @@ func main() {
 	gateway := _gateway.GetInstance(db)
 
 	// Creates scraper instance
-	scraper := _scraper.GetInstance(db)
+	//scraper := _scraper.GetInstance(db)
 
 	// Starts the scraper in the background
-	go scraper.Start()
+	//go scraper.Start()
 
 	// Initialize fiber
 	gateway.Fiber()

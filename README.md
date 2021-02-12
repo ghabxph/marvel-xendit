@@ -13,7 +13,7 @@ Just a simple tool that fetches all characters from official marvel api.
   
 ## Building and running the application
 
-Clone this project:
+Clone our repository:
 
 ``` sh
 # Clones our source code into marvel folder

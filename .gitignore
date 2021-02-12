@@ -1,3 +1,4 @@
 config.yaml
-.characters
+.characters/
 bin
+node_modules/

@@ -36,13 +36,13 @@ func TestGatewayEndpoints(t *testing.T) {
 		resp, _ := fiber.Test(httptest.NewRequest("GET", "/characters", nil))
 		body, _ := ioutil.ReadAll(resp.Body)
 		utils.AssertEqual(t, 200, resp.StatusCode)
-		utils.AssertEqual(t, testutils.GetTestCharacters(), string(body))
+		utils.AssertEqual(t, testutils.SGetTestCharacters(), string(body))
 	})
 
 	t.Run("Get a character through /characters/:id", func(t *testing.T) {
 		resp, _ := fiber.Test(httptest.NewRequest("GET", "/characters/1009146", nil))
 		body, _ := ioutil.ReadAll(resp.Body)
 		utils.AssertEqual(t, 200, resp.StatusCode)
-		utils.AssertEqual(t, testutils.GetTestCharacter(), string(body))
+		utils.AssertEqual(t, testutils.SGetTestCharacter(), string(body))
 	})
 }

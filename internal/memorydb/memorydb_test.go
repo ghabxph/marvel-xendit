@@ -16,12 +16,12 @@ func TestMemoryDB(t *testing.T) {
 	db := GetInstance()
 
 	// Characters (dataset)
-	characters := "[1009146]"
-	character := `{
-  "id": 1009146,
-  "name": "Abomination (Emil blonsky)",
-  "description": "Formerly known as Emil Blonsky, a spy of Soviet Yugoslavian origin working for the KGB, the Abomination gained his powers after receiving a dose of gamma radiation similar to that which transformed Bruce Banner into the incredible Hulk."
-}`
+	characters := []int{1009146}
+	character := map[string]interface{}{
+		"id": 1009146,
+		"name": "Abomination (Emil blonsky)",
+		"description": "Formerly known as Emil Blonsky, a spy of Soviet Yugoslavian origin working for the KGB, the Abomination gained his powers after receiving a dose of gamma radiation similar to that which transformed Bruce Banner into the incredible Hulk.",
+	}
 
 	t.Run("Create a character in memory", func(t *testing.T) {
 		db.CreateCharacter(

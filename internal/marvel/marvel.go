@@ -1,14 +1,15 @@
 package marvel
 
 import (
+	"log"
 	"strconv"
 	"github.com/ghabxph/marvel-xendit/internal/live"
 )
 
 type memorydb_impl interface {
 	CreateCharacter(id int, name string, description string)
-	GetCharacters(page int) string
-	GetCharacter(id int) (string, bool)
+	GetCharacters(page int) []int
+	GetCharacter(id int) (interface{}, bool)
 }
 
 type marvel struct {
@@ -26,14 +27,14 @@ func GetInstance(db ...interface{}) *marvel {
 }
 
 // Get all marvel characters (max of 100)
-func (m *marvel) GetAllCharacters(page string) string {
+func (m *marvel) GetAllCharacters(page string) interface{} {
 
 	// Converts input to string
 	_page, err := strconv.Atoi(page)
 
 	// If not int, then return error
 	if err != nil {
-		return err.Error()
+		return map[string]string{"error": err.Error()}
 	}
 
 	// Otherwise, return characters
@@ -41,7 +42,7 @@ func (m *marvel) GetAllCharacters(page string) string {
 }
 
 // Get a marvel character by ID
-func (m *marvel) GetCharacter(id_str string) string {
+func (m *marvel) GetCharacter(id_str string) interface{} {
 	// Convert string int to integer.
 	// If parameter is not valid int, we will return an error.
 	id, err := strconv.Atoi(id_str)
@@ -51,6 +52,7 @@ func (m *marvel) GetCharacter(id_str string) string {
 
 	// Check if the character exists in cache
 	character, exists := m.db.GetCharacter(id)
+	log.Println(exists)
 	if exists {
 		// Returns the character stored in cache
 		return character

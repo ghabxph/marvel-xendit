@@ -21,7 +21,7 @@ type http_iface interface {
 
 type memorydb_impl interface {
 	CreateCharacter(id int, name string, description string)
-	GetCharacter(id int) (string, bool)
+	GetCharacter(id int) (interface{}, bool)
 }
 
 type live struct {
@@ -62,7 +62,14 @@ func GetInstance(db ...interface{}) *live {
 	return instance
 }
 
-func (l *live) GetCharacter(id string) string {
+func (l *live) GetCharacter(id string) (character interface{}) {
+	defer func(character *interface{}) {
+		if r := recover(); r != nil {
+			id, _ := strconv.Atoi(id)
+			l.db.CreateCharacter(id, "error", "Character does not exist")
+			*character = map[string]string{ "error": "Character does not exist." }
+		}
+	}(&character)
 	raw := l.call("/v1/public/characters/" + id)
 	resp := response{}
 	json.Unmarshal([]byte(raw), &resp)

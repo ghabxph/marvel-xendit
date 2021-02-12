@@ -1,0 +1,25 @@
+{
+  "name": "marvel-xendit",
+  "version": "1.0.0",
+  "description": "Just a simple tool that fetches all characters from official marvel api.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ghabxph/marvel-xendit.git"
+  },
+  "author": "Gabriel Lucernas Pascual",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ghabxph/marvel-xendit/issues"
+  },
+  "homepage": "https://github.com/ghabxph/marvel-xendit#readme",
+  "dependencies": {
+    "swagger-ui": "^3.43.0"
+  }
+}

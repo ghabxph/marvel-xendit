@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"sort"
 	"strconv"
-	"strings"
 )
 
 var store_mode bool = true
@@ -67,18 +66,20 @@ func (m *memorydb) CreateCharacter(id int, name string, description string) {
 }
 
 // Create new character
-func (m *memorydb) GetCharacter(id int) (character string, exists bool) {
-	defer func(character *string, exists *bool) {
-		if r := recover(); r != nil {
-			*character = "{\"error\": \"Character does not exist\"}"
-			*exists = false
-		}
-	}(&character, &exists)
+func (m *memorydb) GetCharacter(id int) (character interface{}, exists bool) {
 
-	return characters[id].getString(), true
+	if character := characters[id]; character == nil {
+		return map[string]string{ "error": "Character does not exist." }, false
+	}
+
+	return map[string]interface{}{
+		"id": characters[id].Id,
+		"name": characters[id].Name,
+		"description": characters[id].Description,
+	}, true
 }
 
-func (m *memorydb) GetCharacters(page int) string {
+func (m *memorydb) GetCharacters(page int) []int {
 
 	// Count of items to show
 	count := 500
@@ -90,21 +91,23 @@ func (m *memorydb) GetCharacters(page int) string {
 	offset := (page - 1) * count
 
 	// Returns empty result if offset is larger or equal to capacity of slice
-	if offset >= total { return "[]" }
+	if offset >= total { return make([]int, 0) }
 
 	// Adjust the value of total if new total is less or equal total
 	if new_total := offset + count; new_total <= total { total = new_total }
 
 	// Slice of converted int key strings
-	keys := make([]string, 0)
+	keys := make([]int, 0)
 
 	for i := offset; i < total; i++ {
 
 		// Adds the character id to string slice
-		keys = append(keys, strconv.Itoa(character_ids[i]))
+		keys = append(keys, character_ids[i])
 	}
 
-	return "[" + strings.Join(keys, ", ") + "]"
+	return keys
+
+	//return "[" + strings.Join(keys, ", ") + "]"
 }
 
 // Get json string of character
